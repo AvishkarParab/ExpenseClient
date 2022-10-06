@@ -1,6 +1,7 @@
 import React from 'react';
 import { useState } from 'react';
 import { Link , useNavigate} from 'react-router-dom';
+import axios from "axios";
 
 
 const Login = () => {
@@ -8,6 +9,20 @@ const Login = () => {
     const[email,setEmail] = useState("");
     const[password,setPassword] = useState("");
 
+
+    const login = async ()=>{
+        try {
+            let user = await axios.post("/users/login",{
+                email,
+                password
+            });
+            if(user)
+                navigate("/expense");
+        } catch (error) {
+            console.log(error);
+        }
+
+    }
 
   return (
     <>
@@ -23,19 +38,19 @@ const Login = () => {
                     <div className="form-outline mb-4">
                         <input type="email" id="form3Example3" className="form-control form-control-lg"
                         placeholder="Enter a valid email address" value={email} onChange={(e)=> setEmail(e.target.value)} />
-                        <label className="form-label" for="form3Example3">Email address</label>
+                        <label className="form-label" htmlFor="form3Example3">Email address</label>
                     </div>
 
                     
                     <div className="form-outline mb-3">
                         <input type="password" id="form3Example4" className="form-control form-control-lg"
                         placeholder="Enter password" value={password} onChange={(e)=> setPassword(e.target.value)} />
-                        <label className="form-label" for="form3Example4">Password</label>
+                        <label className="form-label" htmlFor="form3Example4">Password</label>
                     </div>
 
                     <div className="text-center text-lg-start mt-4 pt-2">
                         <button type="button" className="btn btn-primary text-center" 
-                            onClick={()=> navigate("/expense")}
+                            onClick={()=> login()}
                         >
                         Login</button>
                         <p className="small fw-bold mt-2 pt-1 mb-0">Don't have an account? <Link to="/register"

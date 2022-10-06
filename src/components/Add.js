@@ -5,24 +5,31 @@ import { BiCategory } from 'react-icons/bi';
 import { GiCancel} from 'react-icons/gi';
 import { TiTick} from 'react-icons/ti';
 import { useNavigate,useLocation } from 'react-router-dom';
+import axios from "axios"
 
 
 
 const Add = () => {
+    let today = new Date();
+
     let navigate = useNavigate();
     let location = useLocation();
+
     const editData = location.state;
+
     let [vis,setVis] = useState(false);
+
     let [category,setCategory] = useState("");
+    let [img,setImg] = useState("");
+
     let [operand,setOperand] = useState(0);
+
     let [value,setValue] = useState(editData?editData.amount:0);
+
     let [oper,setOper] = useState("");
     let [etype, setEtype] = useState("expense");
     let [note, setNote] = useState("");
-    let [data,setData] = useState({
-        date:"",
-        time:""
-    });
+    const weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
 
 
 
@@ -32,6 +39,8 @@ const Add = () => {
         elem.onclick = () =>{
             let text = elem.querySelector("span").innerText;
             setCategory(text);
+            setImg(text.toLowerCase())
+            console.log(text.toLowerCase());
             setVis(!vis);
             document.querySelector(".catBox").style.display ="none"
             
@@ -86,18 +95,38 @@ const Add = () => {
         setEtype(e.target.value);
     }
 
-    const done = ()=>{
-        console.log("reached");
-        let details ={
-            etype:etype,
-            category:category,
-            note:note,
-            value:value,
-            date: data.date,
-            time:data.time
-        }
-        console.log(details);
-        navigate("/expense",{state:{details}});
+    const done = async()=>{
+        try {
+            const record = await axios.post(`/records/add-record`,{
+                    year:today.getFullYear(),
+                    month:today.getMonth()
+            });
+
+            if(record.data.id){
+                console.log(record.data.id);
+                const detail = await axios.post('details/add',{
+                    recId:record.data.id,
+                    date:today.getDate(),
+                    day:weekday[today.getDay()],
+                    time:today.getHours() + ":" + today.getMinutes(),
+                    etype:etype,
+                    category,
+                    img:img,
+                    note:note,
+                    amount:value,
+                });
+
+                if(detail){
+                    navigate("/expense");
+                }else{
+                    console.log(detail.data);
+                }
+            }
+          } catch (error) {
+            console.log(error.response.data);
+          }
+        
+        
     } 
 
   return (
@@ -105,10 +134,10 @@ const Add = () => {
         <Navbar/>
         
         <div className='mt-3 confirm d-flex justify-content-between align-middle container'>
-            <button className='btn btn-info d-flex align-items-center justify-around'
+            <button className='btn btn-info d-flex align-items-center justify-around' style={{"boxShadow":"4px 4px 1px black"}}
                 onClick={()=> navigate("/expense")}
             > <GiCancel/> &nbsp; Cancel </button>
-            <button className='btn btn-info d-flex align-items-center justify-around'
+            <button className='btn btn-info d-flex align-items-center justify-around' style={{"boxShadow":"4px 4px 1px black"}}
                 onClick={done}
             > <TiTick/> &nbsp; Save </button>
         </div>
@@ -212,7 +241,7 @@ const Add = () => {
                         setVis(!vis);
                         
                         }}
-                > <BiCategory/> &nbsp; Category</button>
+                > <BiCategory/> &nbsp; Select Category</button>
             </div>
 
             <div className='desp container mt-2'>
@@ -268,7 +297,7 @@ const Add = () => {
                 </div>
             </div>
 
-            <div className='mt-3 container'>
+            {/* <div className='mt-3 container'>
                 <div className='dt row container-fluid'>
                     <div className='col-lg-6 col-md-6 col-12 d-flex justify-center align-middle'>
                         <input type="date" name="date" id="date" value={data.date} onChange={(e)=> setData({...data,date:e.target.value})} />
@@ -277,7 +306,7 @@ const Add = () => {
                         <input type="time" name="time" id="time" value={data.time} onChange={(e)=> setData({...data,time:e.target.value})} />
                     </div>
                 </div>
-            </div>
+            </div> */}
         </div>   
         <br />
     </>

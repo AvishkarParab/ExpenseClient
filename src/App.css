@@ -122,12 +122,58 @@
   cursor: pointer;
 }
 .proCont{
-  margin-top: 20px;
+  position: relative;
+  margin-top: 40px;
   border: 1px solid rgb(44, 44, 44);
   border-radius: 15px;
-  height: 500px;
   box-shadow: 5px 7px 2px 1px rgba(139, 139, 139, 0.868);
   font-family: 'Poppins', sans-serif;
+  padding: 15px 10px;
+  margin-bottom: 10px;
+  background:linear-gradient(45deg, #0048ff57, #00a8f02f);
+  backdrop-filter: saturate(200) blur(10px);
+
+}
+.expenseinfo{
+  font-size: 12px;
+  background-color: black;
+  border-radius: 20px;
+  color: white;
+  padding: 5px 10px;
+  letter-spacing: 1px;
+  font-weight: 500;
+  display: none;
+  width: max-content;
+  cursor: pointer;
+  display: none;
+  justify-content: center;
+  align-items:center;
+pointer-events: none;
+}
+.infobtn{
+
+}
+.diagonal-box {
+  position: relative;
+  /* transform: skewY(-3deg); */
+
+}
+.content{
+  position: relative;
+  /* transform: skewY(+3deg); */
+
+}
+
+.diagonal-box:before {
+   position: absolute;
+   top: 0;
+   right: 0;
+   left: 0;
+   bottom: 0;
+   height: 100%;
+   width: 100%;
+   background:linear-gradient(45deg, #654ea3, #eaafc8); 	
+   transform: skewY(-11deg);
 }
 .leftSide img{
   height: 300px;
@@ -146,6 +192,8 @@
   padding: 20px;
   border-radius: 15px;
   display: grid;
+  background:linear-gradient(45deg, #0048ff57, #00a8f02f);
+
 }
 .category{
 
@@ -153,6 +201,9 @@
  .category button{
   padding: 5px;
   border-radius: 9px;
+  color: #000;
+  background:linear-gradient(45deg, #0048ff57, #00a8f088);
+  
  }
 .desp{
   padding: 5px;
@@ -168,13 +219,19 @@
   text-align: left;
   text-align: start;
   color: #0D6EFD;
+  background:linear-gradient(45deg, #0048ff57, #00a8f02f);
 
+}
+.desp textarea::placeholder{
+  color: white;
 }
 .disp{
   padding: 5px;
   border-radius: 9px;
   border: 1px solid #0D6EFD;
   height: 70px;
+  background:linear-gradient(45deg, #0048ff57, #b0e1f72f);
+
 }
 .oper{
   color: #0D6EFD;

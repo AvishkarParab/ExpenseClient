@@ -4,11 +4,23 @@ import { FaAngleLeft,FaAngleRight,FaLongArrowAltUp,FaLongArrowAltDown,FaRupeeSig
 import { AiFillCloseCircle,AiFillDelete,AiFillEdit } from "react-icons/ai";
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from "axios";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 
 const Expense = () => {
+
+  useEffect(() => {
+    AOS.init({
+      duration : 1500
+    });
+  }, []);
+
   let today = new Date();
   let navigate = useNavigate();
+  const [record,setrecord] = useState();
+  const [errMessage,setErrMessage] = useState();
 
   const [year,setYear] = useState(today.getFullYear());
   const month = ["JANUARY","FEBRUARY","MARCH","APRIL","MAY","JUNE","JULY","AUGUST","SEPTEMBER","OCTOBER","NOVEMBER","DECEMBER"];
@@ -18,65 +30,27 @@ const Expense = () => {
     totPro:0
   }
 
+
   useEffect(() => {
-    console.log("Month has changed " + year + " " + mc);
-  }, [mc,year])
+    const loadData = async()=>{
+      try {
+        const response = await axios.get(`/records/get?year=${year}&month=${mc}`);
+          setrecord(response.data);
+          setErrMessage("");
+      } catch (error) {
+        setrecord([])
+        console.log(error.response.data);
+        setrecord("");
+        setErrMessage(error.response.data.message)
+      }
+     }
+   loadData();
+  },[mc,year]);
   
-
-
-let clot =[
-  {
-    id:1,
-    date:28,
-    day:"Tuesday",
-    month:"August",
-    year:2022,
-    expenses:[
-      {
-        expId:1,
-        img:"clothes",
-        category:"clothes",
-        amount:150,
-        etype:"expense"
-      },
-      {
-        expId:2,
-        img:"clothes",
-        category:"clothes",
-        amount:1500,
-        etype:"profit"
-      },
-  ]
-    
-  },
-  {
-    id:2,
-    date:29,
-    day:"Wednesday",
-    month:"August",
-    year:2022,
-    expenses:[
-      {
-        expId:1,
-        img:"clothes",
-        category:"clothes",
-        amount:150,
-        etype:"expense"
-      },
-      {
-        expId:2,
-        img:"clothes",
-        category:"clothes",
-        amount:1500,
-        etype:"income"
-      },
-  ]
-    
-  },
-];
-if(clot.length > 0){
-  clot.forEach(list =>{
-    list.expenses.forEach(record=>{
+console.log(record);
+if(record){
+  record.forEach(list =>{
+    list.expense.forEach(record=>{
       if(record.etype==="expense")
         budget.totExp+=record.amount;
       else
@@ -89,12 +63,11 @@ const testID =(rec)=>{
       document.querySelector(".liDetails").style.display = "block";
       document.querySelector("#amount").innerHTML = rec.amount;
       document.querySelector("#etype").innerHTML = rec.etype;
-      document.querySelector("#month").innerHTML = "August";
-      document.querySelector("#date").innerHTML = 22;
-      document.querySelector("#year").innerHTML = 2022;
-      document.querySelector("#time").innerHTML = "10.00 AM";
+      document.querySelector("#month").innerHTML = ` ${month[mc]} `;
+      document.querySelector("#year").innerHTML = ` ${year} `;
+      document.querySelector("#time").innerHTML = rec.time;
       document.querySelector("#cate").innerHTML = rec.category;
-      document.querySelector("#note").innerHTML = "Just for fun";
+      document.querySelector("#note").innerHTML = rec.note;
 
       document.querySelector("#edit").onclick =()=>{
         navigate("/add",{state:rec})
@@ -173,7 +146,7 @@ const testID =(rec)=>{
                 <span className='fs-4 d-flex justify-center align-items-center'><FaRupeeSign/><span id='amount'></span></span>
             </div>
             <div className='d-flex justify-end align-items-center'>
-                <h6 className='liTime mt-2'><span id='month'></span><span id='date'></span>,<span id='year'></span> &nbsp; <span id='time'></span></h6>
+                <h6 className='liTime mt-2'><span id='month'></span>,<span id='year'></span> &nbsp; <span id='time'></span></h6>
             </div>
           </div>
           
@@ -190,19 +163,20 @@ const testID =(rec)=>{
           </div>
       </div>
         {
-          (clot.length <= 0)?
-            <h6 className='fw-bold text-blue-600 text-uppercase'>Woww!! No Expense &nbsp; :)  &#x2764; </h6>
-          :
-          clot.map(elem =>{
+          
+          (!record)?
+          <h6 className='fw-bold text-blue-600 text-uppercase'> {errMessage?errMessage:"Woww!! No Expense "} &nbsp; :)  &#x2764; </h6>
+          :record.map(elem =>{
             return(
-              <ul className='elist mt-3' key={elem.date}>
-              <h6 className='fw-bold text-blue-600 text-capitalize'>{elem.date} &nbsp;{elem.month}, &nbsp;{elem.day}</h6>
-              <hr className='line bg-blue-600' style={{height:"3px",opacity:"1"}}/>
+              <ul className='elist mt-3' key={elem._id} >
+              <h6 data-aos="fade-right" className='fw-bold text-blue-600 text-capitalize'>{elem.date} &nbsp;{month[mc]}, &nbsp;{elem.day}</h6>
+              <hr data-aos="fade-up" className='line bg-blue-600' style={{height:"3px",opacity:"1"}}/>
                 {
-                  elem.expenses.map(records =>{
+                  elem.expense.map(records =>{
                     return(
-                            <ul className="dlist" key={records.expId}>
-                              <li className='d-flex justify-between align-items-center' onClick={()=>testID(records)}>
+                         
+                            <ul className="dlist" key={records._id} >
+                              <li data-aos="fade-up" className='d-flex justify-between align-items-center' onClick={()=>testID(records)}>
                                 <div className="d-flex align-items-center">
                                   <img className='mt-2' src={require(`../images/${records.img}.png`)} alt="" height="40" width="40" />
                                   <span className='fw-bold mx-2 text-capitalize'>{records.category}</span>
@@ -214,6 +188,7 @@ const testID =(rec)=>{
                                 }
                               </li>
                             </ul>
+                            
                     )
                   })
                 }
@@ -222,6 +197,7 @@ const testID =(rec)=>{
           })
         }
       </div>
+      <br /><br />
     </>
   )
 }

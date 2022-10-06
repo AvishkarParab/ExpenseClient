@@ -1,14 +1,30 @@
 import React from 'react';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link,useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const Register = () => {
+    let navigate = useNavigate();
     const[name,setName] = useState("");
     const[email,setEmail] = useState("");
     const[password,setPassword] = useState("");
     const[gender,setGender] = useState("");
 
+    const register = async ()=>{
+        try {
+            let user = await axios.post("/users/register",{
+                name,
+                email,
+                password,
+                gender
+            });
+            if(user)
+                navigate("/");
+        } catch (error) {
+            console.log(error.response.data.message);
+        }
 
+    }
 
 
   return (
@@ -26,36 +42,36 @@ const Register = () => {
                     <div className="form-outline mb-4">
                         <input type="text" id="form3Example3" className="form-control form-control-lg"
                         placeholder="Enter full name" value={name} onChange={(e)=> setName(e.target.value)} />
-                        <label className="form-label" for="form3Example3">Username</label>
+                        <label className="form-label" htmlFor="form3Example3">Username</label>
                     </div>
 
                     <div className="form-outline mb-4">
                         <input type="email" id="form3Example3" className="form-control form-control-lg"
                         placeholder="Enter a valid email address" value={email} onChange={(e)=> setEmail(e.target.value)} />
-                        <label className="form-label" for="form3Example3">Email address</label>
+                        <label className="form-label" htmlFor="form3Example3">Email address</label>
                     </div>
 
                     
                     <div className="form-outline mb-3">
                         <input type="password" id="form3Example4" className="form-control form-control-lg"
                         placeholder="Enter password" value={password} onChange={(e)=> setPassword(e.target.value)} />
-                        <label className="form-label" for="form3Example4">Password</label>
+                        <label className="form-label" htmlFor="form3Example4">Password</label>
                     </div>
 
                     <div className="form-outline mb-3" id='gen'>
-                        <label className='mb-3' for="gen" >Gender</label><br />
+                        <label className='mb-3' htmlFor="gen" >Gender</label><br />
                         <div className="form-check form-check-inline">
                             <input className="form-check-input" type="radio" name="gender" id="male" value="male" onClick={(e)=> setGender(e.target.value) } />
-                            <label className="form-check-label" for="male"> Male </label>
+                            <label className="form-check-label" htmlFor="male"> Male </label>
                         </div>
                         <div className="form-check form-check-inline">
                             <input className="form-check-input" type="radio" name="gender" id="female" value="female" onClick={(e)=> setGender(e.target.value) } />
-                            <label className="form-check-label" for="female">Female</label>
+                            <label className="form-check-label" htmlFor="female">Female</label>
                         </div>
                     </div>
 
                     <div className="text-center text-lg-start mt-4 pt-2">
-                        <button type="button" className="btn btn-primary text-center">Register</button>
+                        <button type="button" className="btn btn-primary text-center" onClick={()=> register()}>Register</button>
                         <p className="small fw-bold mt-2 pt-1 mb-0">Already have an account? <Link to="/"
                             className="link-danger">Login</Link></p>
                     </div>
