@@ -16,21 +16,21 @@ const Navbar = () => {
           <span className="navbar-toggler-icon"></span>
         </button>
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul className="navbar-nav text-light mx-3 ms-auto mb-2 mb-lg-0 d-flex justify-content-evenly align-items-center">
-            <li className="nav-item">
-              <NavLink  className={({ isActive }) => (isActive ? 'is-active' : 'linkItem')} to={"/expense"}>Expenses</NavLink>
+          <ul className="navbar-nav text-light mx-3 ms-auto mb-lg-0 d-flex justify-content-evenly align-items-center">
+            <li className="nav-item d-flex justify-content-evenly align-items-center">
+              <NavLink  className={({ isActive }) => (isActive ? 'is-active mx-2' : 'linkItem mx-2')} to={"/expense"}>Expenses</NavLink>
             </li>
-            <li className="nav-item">
-              <NavLink className={({ isActive }) => (isActive ? 'is-active' : 'linkItem')} to="/add" >Add</NavLink>
+            <li className="nav-item d-flex justify-content-evenly align-items-center">
+              <NavLink className={({ isActive }) => (isActive ? 'is-active mx-2' : 'linkItem mx-2')} to="/add" >Add</NavLink>
             </li>
-            <li className="nav-item">
-              {/* <NavLink className={({ isActive }) => (isActive ? 'is-active' : 'linkItem')} to="/analyis" >Analysis</NavLink> */}
+            {/* <li className="nav-item">
+              <NavLink className={({ isActive }) => (isActive ? 'is-active' : 'linkItem')} to="/analyis" >Analysis</NavLink>
+            </li> */}
+            <li className="nav-item d-flex justify-content-evenly align-items-center">
+              <NavLink className={({ isActive }) => (isActive ? 'is-active mx-2' : 'linkItem mx-2')} to="/profile" >Profile</NavLink>
             </li>
-            <li className="nav-item">
-              <NavLink className={({ isActive }) => (isActive ? 'is-active' : 'linkItem')} to="/profile" >Profile</NavLink>
-            </li>
-            <li className="nav-item">
-              <button className="logoutbtn inline-flex items-center bg-red-600 py-1 px-3 mx-2 rounded text-base"
+            <li className="nav-item mt-3 mt-lg-0 mt-md-0">
+              <button className="logoutbtn inline-flex items-center bg-slate-50 py-1 px-3 mx-2 text-base"
                 onClick={()=>{
                   navigate("/");
                 }}

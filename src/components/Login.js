@@ -2,6 +2,8 @@ import React from 'react';
 import { useState } from 'react';
 import { Link , useNavigate} from 'react-router-dom';
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 
 const Login = () => {
@@ -17,8 +19,11 @@ const Login = () => {
                 password
             });
             if(user)
+                toast.info("Login Successful",{theme:'colored'})
                 navigate("/expense");
+                
         } catch (error) {
+            toast.error("Login Failed",{theme:'colored'})
             console.log(error);
         }
 
@@ -62,6 +67,15 @@ const Login = () => {
                 </div>
             </div>
         </section>
+        <ToastContainer
+        position="top-center"
+        autoClose={2000}
+        className="toast-container"
+        toastClassName="dark"
+        newestOnTop={false}
+        closeOnClick
+        
+      />
     </>
   )
 }

@@ -7,6 +7,9 @@ import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+import $ from "jquery";
 
 
 const Expense = () => {
@@ -29,7 +32,19 @@ const Expense = () => {
     totExp:0,
     totPro:0
   }
-
+  const loadDelData = async()=>{
+    try {
+      const response = await axios.get(`/records/get?year=${year}&month=${mc}`);
+        setrecord(response.data);
+        setErrMessage("");
+        toast.success("Expense deleted successfully",{theme: "colored"});
+    } catch (error) {
+      setrecord([])
+      console.log(error.response.data);
+      setrecord("");
+      setErrMessage(error.response.data.message)
+    }
+   }
 
   useEffect(() => {
     const loadData = async()=>{
@@ -37,6 +52,7 @@ const Expense = () => {
         const response = await axios.get(`/records/get?year=${year}&month=${mc}`);
           setrecord(response.data);
           setErrMessage("");
+          toast.info("Expenses fetched successfully",{theme: "colored"});
       } catch (error) {
         setrecord([])
         console.log(error.response.data);
@@ -58,19 +74,46 @@ if(record){
     })
 })
 }
-const testID =(rec)=>{
-  console.log(rec);
-      document.querySelector(".liDetails").style.display = "block";
-      document.querySelector("#amount").innerHTML = rec.amount;
-      document.querySelector("#etype").innerHTML = rec.etype;
+const testID =(rec,exp)=>{
+      $(".cover").slideToggle("slow");
+      $(".liDetails").slideToggle("slow")
+
+      // document.querySelector(".cover").style.display = "block";
+      // document.querySelector(".liDetails").style.display = "block";
+      document.querySelector("#amount").innerHTML = exp.amount;
+      document.querySelector("#etype").innerHTML = exp.etype;
       document.querySelector("#month").innerHTML = ` ${month[mc]} `;
       document.querySelector("#year").innerHTML = ` ${year} `;
-      document.querySelector("#time").innerHTML = rec.time;
-      document.querySelector("#cate").innerHTML = rec.category;
-      document.querySelector("#note").innerHTML = rec.note;
+      document.querySelector("#time").innerHTML = exp.time;
+      document.querySelector("#cate").innerHTML = exp.category;
+      document.querySelector("#note").innerHTML = exp.note;
+      document.querySelector("#explogo").setAttribute("src",require(`../images/${exp.img}.png`));
+
 
       document.querySelector("#edit").onclick =()=>{
-        navigate("/add",{state:rec})
+        document.querySelector(".cover").style.display = "none";
+        navigate("/add",{state:{expense:exp,recordId:rec}})
+      }
+
+      document.querySelector("#delete").onclick = async ()=>{
+        console.log(rec +" "+ exp._id);
+        try {
+          const response = await axios.delete(`/details/delete?rec=${rec}&exp=${exp._id}`);
+            console.log(response);
+            if(response.status===200){
+              loadDelData();
+            }else{
+              console.log("Expense Deletion Failed");
+            }
+        } catch (error) {
+          console.log(error.response.data);
+        }
+        
+        $(".cover").slideToggle("slow");
+        $(".liDetails").slideToggle("slow");
+
+        // document.querySelector(".cover").style.display = "none";
+
       }
 
 }
@@ -78,15 +121,17 @@ const testID =(rec)=>{
   return (
     <>
       <Navbar/>
+      <div className='cover' data-aos="fade-right">
+      </div>
       <div className='box mt-2 container rounded '>
-          <div className='year rounded'>
-            <span><button onClick={() => setYear(year - 1)}><FaAngleLeft/></button></span>
-            <h5>{year}</h5>
-            <span><button onClick={() => setYear(year + 1)}><FaAngleRight/></button></span>
+          <div className='year'>
+            <span><button className='fs-5' onClick={() => setYear(year - 1)}><FaAngleLeft/></button></span>
+            <h5><strong>{year}</strong></h5>
+            <span><button className='fs-5' onClick={() => setYear(year + 1)}><FaAngleRight/></button></span>
           </div>
-          <div className='month rounded'>
+          <div className='month'>
             <span>
-              <button onClick={()=>{
+              <button className='fs-5' onClick={()=>{
                   if(mc-1 < 0){
                     setMc(11);
                     setYear(year-1);
@@ -96,8 +141,8 @@ const testID =(rec)=>{
                 <FaAngleLeft/>
               </button>
             </span>
-            <h4>{month[mc]}</h4>
-            <span><button onClick={()=>{
+            <h4><strong>{month[mc]}</strong></h4>
+            <span><button className='fs-5' onClick={()=>{
                   if(mc+1 > 11){
                     setMc(0);
                     setYear(year+1);
@@ -106,17 +151,17 @@ const testID =(rec)=>{
               }}>
               <FaAngleRight/></button></span>
           </div>
-          <div className='show mt-2 d-flex justify-between align-middle fw-bold'>
+          <div className='show mt-4 d-flex justify-between align-middle fw-bold'>
             <div className='text-center'>
-              <h5>Expense</h5>
+              <h5><strong>Expense</strong></h5>
               <span className='text-danger d-flex align-items-center justify-center'><FaRupeeSign/> {budget.totExp.toFixed(2)}</span>
             </div>
             <div className='text-center'>
-              <h5>Profit</h5>
+              <h5><strong>Profit</strong></h5>
               <span className='text-success d-flex align-items-center justify-center'><FaRupeeSign/> {budget.totPro.toFixed(2)}</span>
             </div>
             <div className='text-center'>
-              <h5>Total</h5>
+              <h5><strong>Total</strong></h5>
               {
                 (budget.totPro - budget.totExp >= 0)?
                 <span className='text-success d-flex align-items-center justify-center'><FaLongArrowAltUp/> <FaRupeeSign/> {(budget.totPro - budget.totExp).toFixed(2)}</span>:
@@ -126,15 +171,21 @@ const testID =(rec)=>{
           </div>
       </div>
       <div className='mainDiv container mt-3'>
-      <div className='liDetails'>
+      <div className='liDetails' data-aos="fade-right" >
           <div className='p-2 text-light upperDiv'>
             <div className='d-flex justify-between align-items-center '>
               <span className='mx-2 fs-5'
-                onClick={()=> {document.querySelector(".liDetails").style.display = "none"}}
+                onClick={()=> {
+                  // document.querySelector(".liDetails").style.display = "none"
+                  // document.querySelector(".cover").style.display = "none";
+                  $(".cover").slideToggle("slow");
+                  $(".liDetails").slideToggle("slow");
+
+                  }}
               ><AiFillCloseCircle/></span>
               <div className='d-flex fs-5'>
-                <span className='mx-2'
-                  onClick={()=> {document.querySelector(".liDetails").style.display = "none"}}
+                <span className='mx-2' id="delete"
+                  // onClick={()=> {}}
                 ><AiFillDelete/></span>
                 <span className='mx-2 fs-5' id='edit'
                  
@@ -153,12 +204,12 @@ const testID =(rec)=>{
           <div className='lowerDiv p-2'>
                 <div className='mt-1 d-flex align-items-center'>
                   <h6 className='d-flex justify-center align-items-center'>Category:&nbsp;  
-                    <img src={require(`../images/clothes.png`)} alt="" width="20" height="20" style={{borderRadius:"50%"}}/> &nbsp; 
+                    <img id="explogo" src={require(`../images/clothes.png`)} alt="" width="30" height="30" style={{borderRadius:"50%"}}/> &nbsp; 
                     <span id='cate' className='text-capitalize'></span>
                   </h6>
                 </div>
                 <div className='mt-2 d-flex justify-center align-items-center text-center'>
-                  <p id='note' className='p-2'></p>
+                  <p id='note' className='fw-bold p-2'></p>
                 </div>
           </div>
       </div>
@@ -168,15 +219,14 @@ const testID =(rec)=>{
           <h6 className='fw-bold text-blue-600 text-uppercase'> {errMessage?errMessage:"Woww!! No Expense "} &nbsp; :)  &#x2764; </h6>
           :record.map(elem =>{
             return(
-              <ul className='elist mt-3' key={elem._id} >
-              <h6 data-aos="fade-right" className='fw-bold text-blue-600 text-capitalize'>{elem.date} &nbsp;{month[mc]}, &nbsp;{elem.day}</h6>
-              <hr data-aos="fade-up" className='line bg-blue-600' style={{height:"3px",opacity:"1"}}/>
+              <ul className='elist mt-4' key={elem._id} >
+              <h6 data-aos="fade-right" className='fw-bold mt-2 fs-5 text-blue-600 text-capitalize'>{elem.date} &nbsp;{month[mc]}, &nbsp;{elem.day}</h6>
+              <hr data-aos="fade-right" className='line bg-blue-600' style={{ marginTop:"-2px",height:"2px",opacity:"1"}}/>
                 {
                   elem.expense.map(records =>{
                     return(
-                         
                             <ul className="dlist" key={records._id} >
-                              <li data-aos="fade-up" className='d-flex justify-between align-items-center' onClick={()=>testID(records)}>
+                              <li data-aos="fade-right" className='d-flex justify-between align-items-center' onClick={()=>testID(elem._id,records)}>
                                 <div className="d-flex align-items-center">
                                   <img className='mt-2' src={require(`../images/${records.img}.png`)} alt="" height="40" width="40" />
                                   <span className='fw-bold mx-2 text-capitalize'>{records.category}</span>
@@ -197,7 +247,17 @@ const testID =(rec)=>{
           })
         }
       </div>
-      <br /><br />
+      <br /><br /><br />
+      <ToastContainer
+        position="bottom-center"
+        autoClose={2000}
+        className="toast-container"
+        toastClassName="dark"
+        newestOnTop={false}
+        closeOnClick
+        
+      />
+      
     </>
   )
 }
