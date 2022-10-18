@@ -1,27 +1,33 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import { Link , useNavigate} from 'react-router-dom';
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-
+import base_url from "../Consts"
 
 const Login = () => {
     let navigate = useNavigate();
     const[email,setEmail] = useState("");
     const[password,setPassword] = useState("");
 
+useEffect(() => {
+//  console.log(process.env);
+
+}, [])
+
 
     const login = async ()=>{
         try {
-            let user = await axios.post("/users/login",{
+            let user = await axios.post(`${base_url}/users/login`,{
                 email,
                 password
             });
-            if(user)
+            if(user){
+                // console.log(user);
                 toast.info("Login Successful",{theme:'colored'})
                 navigate("/expense");
-                
+            }   
         } catch (error) {
             toast.error("Login Failed",{theme:'colored'})
             console.log(error);

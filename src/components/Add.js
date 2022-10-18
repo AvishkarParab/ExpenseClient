@@ -11,6 +11,7 @@ import "aos/dist/aos.css";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import $ from "jquery";
+import base_url from "../Consts"
 
 
 const Add = () => {
@@ -107,7 +108,7 @@ const Add = () => {
 
     const done = async()=>{
         try {
-            const record = await axios.post(`/records/add-record`,{
+            const record = await axios.post(`${base_url}/records/add-record`,{
                     year:today.getFullYear(),
                     month:today.getMonth()
             });
@@ -116,7 +117,7 @@ const Add = () => {
                 console.log(record.data.id);
                 let detail;
                 if(expense){
-                    detail = await axios.put(`details/update?rec=${recordId}&exp=${expense._id}`,{
+                    detail = await axios.put(`${base_url}/details/update?rec=${recordId}&exp=${expense._id}`,{
                         recId:record.data.id,
                         date:today.getDate(),
                         day:weekday[today.getDay()],

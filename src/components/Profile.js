@@ -6,6 +6,7 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import base_url from "../Consts"
 
 
 const Profile = () => {
@@ -35,7 +36,7 @@ const [proData,setProData] = useState({
 useEffect(() => {
   const loadData = async()=>{
     try{
-      const response = await axios.get(`/users/getMe`);
+      const response = await axios.get(`${base_url}/users/getMe`);
       const {name,email,gender} = response.data;
       setProfile({name,email,gender});
     } catch (error) {
@@ -48,7 +49,7 @@ useEffect(() => {
 useEffect(() => {
   const loadProData = async()=>{
     try{
-      const response = await axios.get(`/records/data`);
+      const response = await axios.get(`${base_url}/records/data`);
       const {expenseRate,monthlyExpense,annualExpense,monthlyProfit,annualProfit} = response.data;
       setProData({expenseRate,monthlyExpense,annualExpense,monthlyProfit,annualProfit});
 

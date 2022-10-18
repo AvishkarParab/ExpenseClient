@@ -12,7 +12,7 @@ const Register = () => {
 
     const register = async ()=>{
         try {
-            let user = await axios.post("/users/register",{
+            let user = await axios.post("https://expenseserver-9dgv.onrender.com/users/register",{
                 name,
                 email,
                 password,

@@ -10,6 +10,7 @@ import "aos/dist/aos.css";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import $ from "jquery";
+import base_url from "../Consts"
 
 
 const Expense = () => {
@@ -34,7 +35,7 @@ const Expense = () => {
   }
   const loadDelData = async()=>{
     try {
-      const response = await axios.get(`/records/get?year=${year}&month=${mc}`);
+      const response = await axios.get(`${base_url}/records/get?year=${year}&month=${mc}`);
         setrecord(response.data);
         setErrMessage("");
         toast.success("Expense deleted successfully",{theme: "colored"});
@@ -49,7 +50,7 @@ const Expense = () => {
   useEffect(() => {
     const loadData = async()=>{
       try {
-        const response = await axios.get(`/records/get?year=${year}&month=${mc}`);
+        const response = await axios.get(`${base_url}/records/get?year=${year}&month=${mc}`);
           setrecord(response.data);
           setErrMessage("");
           toast.info("Expenses fetched successfully",{theme: "colored"});
@@ -98,7 +99,7 @@ const testID =(rec,exp)=>{
       document.querySelector("#delete").onclick = async ()=>{
         console.log(rec +" "+ exp._id);
         try {
-          const response = await axios.delete(`/details/delete?rec=${rec}&exp=${exp._id}`);
+          const response = await axios.delete(`${base_url}/details/delete?rec=${rec}&exp=${exp._id}`);
             console.log(response);
             if(response.status===200){
               loadDelData();
