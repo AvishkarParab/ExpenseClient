@@ -32,6 +32,7 @@ const Navbar = () => {
             <li className="nav-item mt-3 mt-lg-0 mt-md-0">
               <button className="logoutbtn inline-flex items-center bg-slate-50 py-1 px-3 mx-2 text-base"
                 onClick={()=>{
+                  sessionStorage.removeItem("userId")
                   navigate("/");
                 }}
               >

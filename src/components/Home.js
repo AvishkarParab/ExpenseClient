@@ -35,7 +35,7 @@ const Expense = () => {
   }
   const loadDelData = async()=>{
     try {
-      const response = await axios.get(`${base_url}/records/get?year=${year}&month=${mc}`);
+      const response = await axios.get(`${base_url}/records/get?year=${year}&month=${mc}&userid=${sessionStorage.getItem("userId")}`);
         setrecord(response.data);
         setErrMessage("");
         toast.success("Expense deleted successfully",{theme: "colored"});
@@ -50,7 +50,7 @@ const Expense = () => {
   useEffect(() => {
     const loadData = async()=>{
       try {
-        const response = await axios.get(`${base_url}/records/get?year=${year}&month=${mc}`);
+        const response = await axios.get(`${base_url}/records/get?year=${year}&month=${mc}&userid=${sessionStorage.getItem("userId")}`);
           setrecord(response.data);
           setErrMessage("");
           toast.info("Expenses fetched successfully",{theme: "colored"});

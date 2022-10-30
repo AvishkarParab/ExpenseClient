@@ -36,7 +36,7 @@ const [proData,setProData] = useState({
 useEffect(() => {
   const loadData = async()=>{
     try{
-      const response = await axios.get(`${base_url}/users/getMe`);
+      const response = await axios.get(`${base_url}/users/getMe?userid=${sessionStorage.getItem("userId")}`);
       const {name,email,gender} = response.data;
       setProfile({name,email,gender});
     } catch (error) {
@@ -49,7 +49,7 @@ useEffect(() => {
 useEffect(() => {
   const loadProData = async()=>{
     try{
-      const response = await axios.get(`${base_url}/records/data`);
+      const response = await axios.get(`${base_url}/records/data?userid=${sessionStorage.getItem("userId")}`);
       const {expenseRate,monthlyExpense,annualExpense,monthlyProfit,annualProfit} = response.data;
       setProData({expenseRate,monthlyExpense,annualExpense,monthlyProfit,annualProfit});
 

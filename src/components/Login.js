@@ -24,7 +24,8 @@ useEffect(() => {
                 password
             });
             if(user){
-                // console.log(user);
+                // console.log(user.data._id);
+                sessionStorage.setItem("userId",user.data._id)
                 toast.info("Login Successful",{theme:'colored'})
                 navigate("/expense");
             }   

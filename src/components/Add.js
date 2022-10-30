@@ -109,6 +109,7 @@ const Add = () => {
     const done = async()=>{
         try {
             const record = await axios.post(`${base_url}/records/add-record`,{
+                    userid:sessionStorage.getItem("userId"),
                     year:today.getFullYear(),
                     month:today.getMonth()
             });
@@ -129,7 +130,7 @@ const Add = () => {
                         amount:value,
                     });
                 }else{
-                    detail = await axios.post('details/add',{
+                    detail = await axios.post(`${base_url}/details/add`,{
                         recId:record.data.id,
                         date:today.getDate(),
                         day:weekday[today.getDay()],

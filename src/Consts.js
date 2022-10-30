@@ -1,3 +1,3 @@
-const base_url = "https://expenseserver-9dgv.onrender.com";
+const base_url = "http://localhost:8000";
 
 export default base_url;
