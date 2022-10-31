@@ -2,6 +2,8 @@ import React from 'react';
 import { useState } from 'react';
 import { Link,useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import base_url from "../Consts"
+
 
 const Register = () => {
     let navigate = useNavigate();
@@ -12,7 +14,7 @@ const Register = () => {
 
     const register = async ()=>{
         try {
-            let user = await axios.post("https://expenseserver-9dgv.onrender.com/users/register",{
+            let user = await axios.post(`${base_url}/users/register`,{
                 name,
                 email,
                 password,

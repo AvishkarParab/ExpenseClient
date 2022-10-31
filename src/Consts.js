@@ -1,3 +1,3 @@
-const base_url = "http://localhost:8000";
+const base_url = "https://easy-tan-catfish-tie.cyclic.app";
 
 export default base_url;
