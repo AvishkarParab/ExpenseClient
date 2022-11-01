@@ -1,6 +1,8 @@
 import React from 'react';
 import {NavLink, useNavigate} from 'react-router-dom';
 import { FiLogOut } from 'react-icons/fi';
+import {HiMenuAlt1 } from 'react-icons/hi';
+
 
 const Navbar = () => {
   let navigate = useNavigate();
@@ -12,8 +14,8 @@ const Navbar = () => {
       <img src="https://images-na.ssl-images-amazon.com/images/I/61AxZXJ1u7L.png" alt="no" className="d-inline-block align-text-top h-12 w-12 mx-1" />
       Expense Tracker
       </div>
-        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span className="navbar-toggler-icon"></span>
+        <button className="menulogo navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <HiMenuAlt1 style={{"fontSize":"25px","color":"white"}}/>
         </button>
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav text-light mx-3 ms-auto mb-lg-0 d-flex justify-content-evenly align-items-center">
